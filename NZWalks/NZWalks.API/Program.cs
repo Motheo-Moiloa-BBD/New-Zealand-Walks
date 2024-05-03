@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using NZWalks.Services;
 using NZWalks.Services.Interfaces;
 using NZWalks.Infrastructure.ServiceExtension;
+using NZWalks.Core.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
 
