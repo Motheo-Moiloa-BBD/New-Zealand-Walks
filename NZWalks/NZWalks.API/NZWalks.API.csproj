@@ -16,7 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\NZWalks.Core\NZWalks.Core.csproj" />
+    <ProjectReference Include="..\NZWalks.Infrastructure\NZWalks.Infrastructure.csproj" />
+    <ProjectReference Include="..\NZWalks.Services\NZWalks.Services.csproj" />
   </ItemGroup>
 
 </Project>

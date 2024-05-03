@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using NZWalks.API.Data;
+using NZWalks.Infrastructure.Data;
 
 #nullable disable
 
-namespace NZWalks.API.Migrations
+namespace NZWalks.Infrastructure.Migrations
 {
     [DbContext(typeof(NzWalksDbContext))]
     partial class NzWalksDbContextModelSnapshot : ModelSnapshot
@@ -22,7 +22,7 @@ namespace NZWalks.API.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("NZWalks.API.Models.Domain.Difficulty", b =>
+            modelBuilder.Entity("NZWalks.Core.Models.Domain.Difficulty", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -37,7 +37,7 @@ namespace NZWalks.API.Migrations
                     b.ToTable("Difficulties");
                 });
 
-            modelBuilder.Entity("NZWalks.API.Models.Domain.Region", b =>
+            modelBuilder.Entity("NZWalks.Core.Models.Domain.Region", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -59,7 +59,7 @@ namespace NZWalks.API.Migrations
                     b.ToTable("Regions");
                 });
 
-            modelBuilder.Entity("NZWalks.API.Models.Domain.Walk", b =>
+            modelBuilder.Entity("NZWalks.Core.Models.Domain.Walk", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -94,15 +94,15 @@ namespace NZWalks.API.Migrations
                     b.ToTable("Walks");
                 });
 
-            modelBuilder.Entity("NZWalks.API.Models.Domain.Walk", b =>
+            modelBuilder.Entity("NZWalks.Core.Models.Domain.Walk", b =>
                 {
-                    b.HasOne("NZWalks.API.Models.Domain.Difficulty", "Difficulty")
+                    b.HasOne("NZWalks.Core.Models.Domain.Difficulty", "Difficulty")
                         .WithMany()
                         .HasForeignKey("DifficultyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("NZWalks.API.Models.Domain.Region", "Region")
+                    b.HasOne("NZWalks.Core.Models.Domain.Region", "Region")
                         .WithMany()
                         .HasForeignKey("RegionId")
                         .OnDelete(DeleteBehavior.Cascade)
