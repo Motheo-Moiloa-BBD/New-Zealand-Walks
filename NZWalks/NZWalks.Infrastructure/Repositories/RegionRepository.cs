@@ -12,9 +12,9 @@ namespace NZWalks.Infrastructure.Repositories
 {
     public class RegionRepository: GenericRepository<Region>, IRegionRepository
     {
+        //Add methods that are specific to the Region Entity
         public RegionRepository(NzWalksDbContext dbContext) : base(dbContext)
         {
-           //Add methods that are specific to the Region Entity
         }
     }
 }

@@ -9,6 +9,7 @@ namespace NZWalks.Core.Interfaces
     public interface IUnitOfWork : IDisposable
     {
         IRegionRepository Regions { get; }
+        IWalkRepository Walks { get; }
         Task<int> Save();
     }
 }

@@ -12,11 +12,13 @@ namespace NZWalks.Infrastructure.Repositories
     {
         private readonly NzWalksDbContext dbContext;
         public IRegionRepository Regions { get; private set; }
+        public IWalkRepository Walks { get; private set; }
 
-        public UnitOfWork(NzWalksDbContext dbContext, IRegionRepository regionRepository)
+        public UnitOfWork(NzWalksDbContext dbContext, IRegionRepository regionRepository, IWalkRepository walkRepository)
         {
             this.dbContext = dbContext;
             Regions = regionRepository;
+            Walks = walkRepository;
         }
 
         public async Task<int> Save()
