@@ -21,9 +21,9 @@ namespace NZWalks.Services
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
         }
-        public async Task<IEnumerable<WalkDTO>> GetAllWalks()
+        public async Task<IEnumerable<WalkDTO>> GetAllWalks(string? filterOn = null, string? filterQuery = null, string? sortBy = null, string? sortOrder = null, int? pageNumber = 1, int? pageSize = 5)
         {
-            var existingWalks = await unitOfWork.Walks.GetAllWalksAsync();
+            var existingWalks = await unitOfWork.Walks.GetAllWalksAsync(filterOn, filterQuery, sortBy, sortOrder, pageNumber, pageSize);
 
             var walksDto = mapper.Map<IEnumerable<Walk>, IEnumerable <WalkDTO>> (existingWalks);
 

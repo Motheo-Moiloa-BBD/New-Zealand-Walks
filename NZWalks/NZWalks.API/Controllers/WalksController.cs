@@ -16,10 +16,11 @@ namespace NZWalks.API.Controllers
             this.walkService = walkService;
         }
 
+        //https://localhost:xxxx/api/categories?query=keyword&sortBy=columnName&sortOrder=desc/asc
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] string? filterOn, [FromQuery] string? filterQuery, [FromQuery] string? sortBy, [FromQuery] string? sortOrder, [FromQuery] int? pageNumber, [FromQuery] int? pageSize)
         {
-            var walks = await walkService.GetAllWalks();
+            var walks = await walkService.GetAllWalks(filterOn, filterQuery, sortBy, sortOrder, pageNumber, pageSize);
 
             return Ok(walks);
         }

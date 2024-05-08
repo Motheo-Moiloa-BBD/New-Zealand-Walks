@@ -21,9 +21,50 @@ namespace NZWalks.Infrastructure.Repositories
         {
             return await dbContext.Walks.Include(walk => walk.Difficulty).Include(walk => walk.Region).FirstOrDefaultAsync(w => w.Id == id);
         }
-        public async Task<IEnumerable<Walk>> GetAllWalksAsync()
+        public async Task<IEnumerable<Walk>> GetAllWalksAsync(string? filterOn = null, string? filterQuery = null, string? sortBy = null, string? sortOrder = null, int? pageNumber = 1, int? pageSize = 5)
         {
-            return await dbContext.Walks.Include(walk => walk.Difficulty).Include(walk => walk.Region).ToListAsync();
+            var walks = dbContext.Walks.Include(walk => walk.Difficulty).Include(walk => walk.Region).AsQueryable();
+
+            //Filtering
+            if (string.IsNullOrWhiteSpace(filterOn) == false && string.IsNullOrWhiteSpace(filterQuery) == false)
+            {
+                if (filterOn.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    walks = walks.Where(walk => walk.Name.Contains(filterQuery));
+                }
+                
+                if(filterOn.Equals("Description", StringComparison.OrdinalIgnoreCase))
+                {
+                    walks = walks.Where(walk => walk.Description.Contains(filterQuery));
+                }
+                
+                if (filterOn.Equals("Length"))
+                {
+                    walks = walks.Where(walk => walk.Length.Equals(int.Parse(filterQuery)));
+                }
+                
+            }
+
+            //Sorting
+            if (string.IsNullOrWhiteSpace(sortBy) == false && string.IsNullOrWhiteSpace(sortOrder) == false) 
+            { 
+                if(sortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    var isAsc = string.Equals(sortOrder, "asc", StringComparison.OrdinalIgnoreCase) ? true : false;
+                    walks = isAsc ? walks.OrderBy(walk => walk.Name) : walks.OrderByDescending(walks => walks.Name);
+                }
+
+                if (sortBy.Equals("Length", StringComparison.OrdinalIgnoreCase))
+                {
+                    var isAsc = string.Equals(sortOrder, "asc", StringComparison.OrdinalIgnoreCase) ? true : false;
+                    walks = isAsc ? walks.OrderBy(walk => walk.Length) : walks.OrderByDescending(walks => walks.Length);
+                }
+            }
+
+            //Pagination
+            var skipResults = (pageNumber - 1) * pageSize;
+
+            return await walks.Skip(skipResults ?? 0).Take(pageSize ?? 5).ToListAsync();
         }
     }
 }
