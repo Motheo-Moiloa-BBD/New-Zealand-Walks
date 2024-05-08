@@ -5,6 +5,7 @@ using NZWalks.Services.Interfaces;
 using NZWalks.Core.Models.DTO;
 using NZWalks.Core.Models.Domain;
 using NZWalks.Infrastructure.Repositories;
+using NZWalks.Core.CustomAttributes;
 
 namespace NZWalks.API.Controllers
 {
@@ -43,6 +44,7 @@ namespace NZWalks.API.Controllers
 
         
         [HttpPost]
+        [ValidateModel]
         public async Task<IActionResult> Create([FromBody] AddRegionDTO addRegionDTO)
         {
            var createdRegion = await regionService.CreateRegion(addRegionDTO);
@@ -58,6 +60,7 @@ namespace NZWalks.API.Controllers
         
         [HttpPut]
         [Route("{id:Guid}")]
+        [ValidateModel]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionDTO updateRegionRequestDTO)
         {
             var updatedRegion = await regionService.UpdateRegion(id, updateRegionRequestDTO); 
