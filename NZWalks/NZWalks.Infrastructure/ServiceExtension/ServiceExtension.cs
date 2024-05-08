@@ -21,6 +21,11 @@ namespace NZWalks.Infrastructure.ServiceExtension
                 options.UseSqlServer(configuration.GetConnectionString("NzWalksConnectionString"));
             });
 
+            services.AddDbContext<NzWalksAuthDbContext>(options =>
+            {
+                options.UseSqlServer(configuration.GetConnectionString("NzWalksConnectionString"));
+            });
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IRegionRepository, RegionRepository>();
             services.AddScoped<IWalkRepository, WalkRepository>();

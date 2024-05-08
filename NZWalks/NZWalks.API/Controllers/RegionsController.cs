@@ -6,11 +6,13 @@ using NZWalks.Core.Models.DTO;
 using NZWalks.Core.Models.Domain;
 using NZWalks.Infrastructure.Repositories;
 using NZWalks.Core.CustomAttributes;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NZWalks.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RegionsController : ControllerBase
     {
         private readonly IRegionService regionService;
