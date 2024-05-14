@@ -11,6 +11,6 @@ namespace NZWalks.Services.Interfaces
     public interface IAuthService
     {
         Task<IdentityUser> RegisterUser(RegisterDTO registerDTO);
-        Task LoginUser(LoginDTO loginDTO);
+        Task<LoginResponseDTO> LoginUser(LoginDTO loginDTO);
     }
 }

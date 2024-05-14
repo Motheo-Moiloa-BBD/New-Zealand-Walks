@@ -29,6 +29,7 @@ namespace NZWalks.Infrastructure.ServiceExtension
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IRegionRepository, RegionRepository>();
             services.AddScoped<IWalkRepository, WalkRepository>();
+            services.AddScoped<ITokenRepository, TokenRepository>();
 
             return services;
         }

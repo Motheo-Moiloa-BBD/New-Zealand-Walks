@@ -10,6 +10,7 @@ namespace NZWalks.Core.Interfaces
     {
         IRegionRepository Regions { get; }
         IWalkRepository Walks { get; }
+        ITokenRepository Tokens { get; }
         Task<int> Save();
     }
 }

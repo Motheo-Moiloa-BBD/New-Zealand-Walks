@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using NZWalks.Core.Interfaces;
 using NZWalks.Core.Models.DTO;
 using NZWalks.Services.Interfaces;
 using System;
@@ -12,10 +13,12 @@ namespace NZWalks.Services
     public class AuthService : IAuthService
     {
         private readonly UserManager<IdentityUser> userManager;
+        private readonly IUnitOfWork unitOfWork;
 
-        public AuthService(UserManager<IdentityUser> userManager)
+        public AuthService(UserManager<IdentityUser> userManager, IUnitOfWork unitOfWork)
         {
             this.userManager = userManager;
+            this.unitOfWork = unitOfWork;
         }
         public async Task<IdentityUser> RegisterUser(RegisterDTO registerDTO)
         {
@@ -30,20 +33,22 @@ namespace NZWalks.Services
             if(identityResult.Succeeded)
             {
                 //Add roles to this user
-                if(registerDTO.Roles != null && registerDTO.Roles.Any())
-                identityResult = await userManager.AddToRolesAsync(identityUser, registerDTO.Roles);
-
-                if (identityResult.Succeeded)
+                if(registerDTO.Roles != null)
                 {
-                    return identityUser;
-                }
+                    identityResult = await userManager.AddToRolesAsync(identityUser, registerDTO.Roles);
 
+                    if (identityResult.Succeeded)
+                    {
+                        return identityUser;
+                    }
+                }
+                
             }
 
             return null;
         }
 
-        public async Task LoginUser(LoginDTO loginDTO)
+        public async Task<LoginResponseDTO> LoginUser(LoginDTO loginDTO)
         {
             var user = await userManager.FindByEmailAsync(loginDTO.Username);
 
@@ -53,7 +58,22 @@ namespace NZWalks.Services
 
                 if (checkPasswordResult)
                 {
-                    //Create token
+                    //Get roles for this user
+                    var roles = await userManager.GetRolesAsync(user);
+
+                    if(roles != null)
+                    {
+                        //Create token
+                        var token = unitOfWork.Tokens.CreateToken(user, roles.ToList());
+
+                        var response = new LoginResponseDTO
+                        {
+                            JwtToken = token
+                        };
+
+                        return response;
+                    }
+                   
                 }
                 else
                 {
