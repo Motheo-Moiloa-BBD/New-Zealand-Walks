@@ -30,6 +30,7 @@ namespace NZWalks.Infrastructure.ServiceExtension
             services.AddScoped<IRegionRepository, RegionRepository>();
             services.AddScoped<IWalkRepository, WalkRepository>();
             services.AddScoped<ITokenRepository, TokenRepository>();
+            services.AddScoped<IImageRepository, ImageRepository>();
 
             return services;
         }

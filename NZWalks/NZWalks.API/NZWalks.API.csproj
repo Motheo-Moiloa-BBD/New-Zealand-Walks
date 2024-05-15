@@ -21,4 +21,8 @@
     <ProjectReference Include="..\NZWalks.Services\NZWalks.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Images\" />
+  </ItemGroup>
+
 </Project>

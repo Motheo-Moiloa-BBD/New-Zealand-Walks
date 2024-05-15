@@ -23,6 +23,9 @@ namespace NZWalks.Core.Mappings
 
             //Difficulty mappings
             CreateMap<Difficulty, DifficultyDTO>().ReverseMap();
+
+            //Image mappings
+            CreateMap<Image, ImageDTO>().ReverseMap();
   
         }
     }

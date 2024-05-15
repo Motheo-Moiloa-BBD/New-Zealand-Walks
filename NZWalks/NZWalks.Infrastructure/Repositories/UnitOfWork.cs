@@ -14,13 +14,15 @@ namespace NZWalks.Infrastructure.Repositories
         public IRegionRepository Regions { get; private set; }
         public IWalkRepository Walks { get; private set; }
         public ITokenRepository Tokens { get; private set; }
+        public IImageRepository Images { get; }
 
-        public UnitOfWork(NzWalksDbContext dbContext, IRegionRepository regionRepository, IWalkRepository walkRepository, ITokenRepository tokenRepository)
+        public UnitOfWork(NzWalksDbContext dbContext, IRegionRepository regionRepository, IWalkRepository walkRepository, ITokenRepository tokenRepository, IImageRepository imageRepository)
         {
             this.dbContext = dbContext;
             Regions = regionRepository;
             Walks = walkRepository;
             Tokens = tokenRepository;
+            Images = imageRepository;
         }
 
         public async Task<int> Save()
