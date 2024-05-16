@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using UnauthorizedAccessException = NZWalks.Core.Exceptions.UnauthorizedAccessException;
 
 namespace NZWalks.Core.Middlewares
 {
@@ -56,6 +57,11 @@ namespace NZWalks.Core.Middlewares
                     exceptionResponse.statusCode = (int)HttpStatusCode.BadRequest;
                     exceptionResponse.statusMessage = ex.Message;
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    break;
+                case UnauthorizedAccessException:
+                    exceptionResponse.statusCode = (int)HttpStatusCode.Unauthorized;
+                    exceptionResponse.statusMessage = ex.Message;
+                    response.StatusCode = (int)HttpStatusCode.Unauthorized;
                     break;
                 case NotFoundException:
                     exceptionResponse.statusCode = (int)HttpStatusCode.NotFound;
