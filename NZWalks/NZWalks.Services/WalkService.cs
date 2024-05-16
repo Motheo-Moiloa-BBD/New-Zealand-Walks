@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using NZWalks.Core.Exceptions;
 using NZWalks.Core.Interfaces;
 using NZWalks.Core.Models.Domain;
 using NZWalks.Core.Models.DTO;
@@ -35,7 +36,7 @@ namespace NZWalks.Services
 
             if (existingWalk == null)
             {
-                return null;
+                throw new NotFoundException($"Walk with id {id} does not exist.");
             }
 
             var walkDto = mapper.Map<Walk, WalkDTO>(existingWalk);
@@ -57,7 +58,7 @@ namespace NZWalks.Services
             }
             else
             {
-                return null;
+                throw new BadRequestException("There was a problem when saving the walk.");
             }
         }
 
@@ -67,7 +68,7 @@ namespace NZWalks.Services
 
             if (existingWalk == null)
             {
-                return null;
+                throw new NotFoundException($"Walk with id {id} does not exist.");
             }
             
             existingWalk.Name = updatedWalkDTO.Name;
@@ -88,7 +89,7 @@ namespace NZWalks.Services
             }
             else
             {
-                return null;
+                throw new BadRequestException("There was a problem when updating the walk.");
             }
         }
 
@@ -98,7 +99,7 @@ namespace NZWalks.Services
 
             if (existingWalk == null)
             {
-                return null;
+                throw new NotFoundException($"Walk with id {id} does not exist.");
             }
 
             unitOfWork.Walks.Delete(existingWalk);
@@ -112,7 +113,7 @@ namespace NZWalks.Services
             }
             else
             {
-                return null;
+                throw new BadRequestException("There was a problem when updating the walk.");
             }
         }
     }

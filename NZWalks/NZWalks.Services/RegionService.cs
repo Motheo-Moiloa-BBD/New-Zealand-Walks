@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using NZWalks.Core.Exceptions;
 using NZWalks.Core.Interfaces;
 using NZWalks.Core.Models.Domain;
 using NZWalks.Core.Models.DTO;
@@ -35,7 +36,7 @@ namespace NZWalks.Services
             
             if (existingRegion == null)
             {
-                return null;
+                throw new NotFoundException($"Region with id {id} does not exist.");
             }
 
             var regionDto = mapper.Map<Region, RegionDTO>(existingRegion);
@@ -56,7 +57,7 @@ namespace NZWalks.Services
                 return regionDto;
             }else
             {
-                return null;
+                throw new BadRequestException("There was a problem when saving the region.");
             }
         }
         public async Task<RegionDTO> UpdateRegion(Guid id,UpdateRegionDTO updateRegionDTO)
@@ -65,7 +66,7 @@ namespace NZWalks.Services
 
             if (exisitingRegion == null)
             {
-                return null;
+                throw new NotFoundException($"Region with id {id} does not exist.");
             }
 
             exisitingRegion.Code = updateRegionDTO.Code;
@@ -83,7 +84,7 @@ namespace NZWalks.Services
             }
             else
             {
-                return null;
+                throw new BadRequestException("There was a problem when updating the region.");
             }
         }
         public async Task<RegionDTO> DeleteRegion(Guid id)
@@ -92,7 +93,7 @@ namespace NZWalks.Services
 
             if (region == null)
             {
-                return null;
+                throw new NotFoundException($"Region with id {id} does not exist.");
             }
 
             unitOfWork.Regions.Delete(region);
@@ -106,7 +107,7 @@ namespace NZWalks.Services
             }
             else
             {
-                return null;
+                throw new BadRequestException("There was a problem when deleting the region.");
             }
         }
 

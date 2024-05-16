@@ -18,7 +18,7 @@ namespace NZWalks.API.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Reader, Writer")]
+        //[Authorize(Roles = "Reader, Writer")]
         public async Task<IActionResult> GetAll([FromQuery] string? filterOn, [FromQuery] string? filterQuery, [FromQuery] string? sortBy, [FromQuery] string? sortOrder, [FromQuery] int? pageNumber, [FromQuery] int? pageSize)
         {
             var walks = await walkService.GetAllWalks(filterOn, filterQuery, sortBy, sortOrder, pageNumber, pageSize);
@@ -28,15 +28,10 @@ namespace NZWalks.API.Controllers
         
         [HttpGet]
         [Route("{id:guid}")]
-        [Authorize(Roles = "Reader, Writer")]
+        //[Authorize(Roles = "Reader, Writer")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             var walk = await walkService.GetWalkById(id);
-
-            if (walk == null)
-            {
-                return NotFound();
-            }
 
             return Ok(walk);
         }
@@ -46,11 +41,6 @@ namespace NZWalks.API.Controllers
         public async Task<IActionResult> Create([FromBody] AddWalkDTO addWalkDTO)
         {
             var createdWalk = await walkService.CreateWalk(addWalkDTO);
-
-            if(createdWalk == null)
-            {
-                return BadRequest();
-            }
 
             return CreatedAtAction(nameof(GetById), new { id = createdWalk.Id }, createdWalk);
         }
@@ -62,11 +52,6 @@ namespace NZWalks.API.Controllers
         {
             var updatedWalk = await walkService.UpdateWalk(id, updatedWalkDto);
 
-            if(updatedWalk == null)
-            {
-                return NotFound();
-            }
-
             return Ok(updatedWalk);
         }
 
@@ -76,11 +61,6 @@ namespace NZWalks.API.Controllers
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             var deletedWalk = await walkService.DeleteWalk(id);
-
-            if (deletedWalk == null)
-            {
-                return NotFound();
-            }
 
             return Ok(deletedWalk);
         }

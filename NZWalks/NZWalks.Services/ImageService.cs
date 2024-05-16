@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using NZWalks.Core.Exceptions;
 using NZWalks.Core.Interfaces;
 using NZWalks.Core.Models.Domain;
 using NZWalks.Core.Models.DTO;
@@ -61,7 +62,7 @@ namespace NZWalks.Services
             }
             else
             {
-                return null;
+                throw new BadRequestException("There was a problem when saving the image.");
             }
 
         }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using NZWalks.Core.Exceptions;
 using NZWalks.Core.Interfaces;
 using NZWalks.Core.Models.DTO;
 using NZWalks.Services.Interfaces;
@@ -45,7 +46,7 @@ namespace NZWalks.Services
                 
             }
 
-            return null;
+            throw new BadRequestException("There was a problem when registering the user.");
         }
 
         public async Task<LoginResponseDTO> LoginUser(LoginDTO loginDTO)
@@ -77,11 +78,11 @@ namespace NZWalks.Services
                 }
                 else
                 {
-                    return null;
+                    throw new BadRequestException("Username or password incorrect.");
                 }
             }
 
-            return null;
+            throw new BadRequestException("Username or password incorrect.");
         }
 
     }

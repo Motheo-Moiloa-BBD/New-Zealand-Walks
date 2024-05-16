@@ -21,13 +21,8 @@ namespace NZWalks.API.Controllers
         public async Task<IActionResult> Register([FromBody] RegisterDTO registerDTO)
         {
             var result = await authService.RegisterUser(registerDTO);
-
-            if(result == null)
-            {
-                return BadRequest();
-            }
-
-            else return Ok("User was registered successfuly.");
+            
+            return Ok("User was registered successfuly.");
         }
 
         [HttpPost]
@@ -36,14 +31,7 @@ namespace NZWalks.API.Controllers
         {
             var result = await authService.LoginUser(loginDTO);
 
-            if (result == null)
-            {
-                return BadRequest("Username or password incorrect.");
-            }
-            else
-            {
-                return Ok(result);
-            }
+            return Ok(result);
         }
     }
 }

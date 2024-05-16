@@ -22,7 +22,7 @@ namespace NZWalks.API.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Roles = "Reader, Writer")]
+        [Authorize(Roles = "Reader, Writer")]
         public async Task<IActionResult> GetAll()
         {
             var regions = await regionService.GetAllRegions();
@@ -38,11 +38,6 @@ namespace NZWalks.API.Controllers
         {
             var region = await regionService.GetRegionById(id);
 
-            if(region == null)
-            {
-                return NotFound();
-            }
-           
             return Ok(region);
         }
 
@@ -53,11 +48,6 @@ namespace NZWalks.API.Controllers
         public async Task<IActionResult> Create([FromBody] AddRegionDTO addRegionDTO)
         {
            var createdRegion = await regionService.CreateRegion(addRegionDTO);
-
-           if(createdRegion == null)
-           {
-                return BadRequest();
-           }
 
             return CreatedAtAction(nameof(GetById), new {id = createdRegion.Id }, createdRegion);
         }
@@ -71,11 +61,6 @@ namespace NZWalks.API.Controllers
         {
             var updatedRegion = await regionService.UpdateRegion(id, updateRegionRequestDTO); 
 
-            if(updatedRegion == null)
-            {
-                return NotFound();
-            }
-
             return Ok(updatedRegion);
         }
         
@@ -86,11 +71,6 @@ namespace NZWalks.API.Controllers
         {
             var deletedRegion = await regionService.DeleteRegion(id);
 
-            if (deletedRegion == null)
-            {
-                return NotFound();
-            }
-            
             return Ok(deletedRegion);
         }
 
