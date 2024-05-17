@@ -24,6 +24,12 @@ jobs:
       run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
     - name: Test
       run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
+    - name: Update Database
+      run: |
+        dotnet tool install --global dotnet-ef
+        dotnet tool restore
+        dotent tool ef database update -c NzWalksDbContext
+        dotent tool ef database update -c NzWalksAuthDbContext
     - name: Publish
       run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
     - name: Publish Artifacts
