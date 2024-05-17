@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/app-nzwalks-south-africa-dev/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsNzWalksConnectionString_3A0A5C78CC",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/sqlserver-nzwalks-south-africa-dev/databases/sqldb-nzwalks-south-africa-dev",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:NzWalksConnectionString",
+      "dynamicId": null
+    }
+  }
+}
