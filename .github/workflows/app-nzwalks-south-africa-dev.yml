@@ -29,11 +29,16 @@ jobs:
       run: |
            dotnet-ef migrations script --output ${{ env.WORKING_DIRECTORY }}/sql/sql-script.sql --idempotent -c NzWalksDbContext --project "${{ env.MIGRATIONS_DIRECTORY }}" --startup-project "${{ env.WORKING_DIRECTORY }}" --no-build
            dotnet-ef migrations script --output ${{ env.WORKING_DIRECTORY }}/sql/sql-auth-script.sql --idempotent -c NzWalksAuthDbContext --project "${{ env.MIGRATIONS_DIRECTORY }}" --startup-project "${{ env.WORKING_DIRECTORY }}" --no-build
-    - name: Azure SQL Deploy
+    - name: Azure SQL Deploy Normal Db Context
       uses: azure/sql-action@v2.2.1
       with: 
         connection-string: ${{ secrets.connection_string }}
-        path: ${{ env.WORKING_DIRECTORY }}/sql/*.sql
+        path: ${{ env.WORKING_DIRECTORY }}/sql/sql-script.sql
+    - name: Azure SQL Deploy Auth Db Context
+      uses: azure/sql-action@v2.2.1
+      with: 
+        connection-string: ${{ secrets.connection_string }}
+        path: ${{ env.WORKING_DIRECTORY }}/sql/sql-auth-script.sql
     - name: Test
       run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
     - name: Publish
