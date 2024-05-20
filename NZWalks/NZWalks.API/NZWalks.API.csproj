@@ -26,12 +26,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Images\*">
+    <Content Include="Images\">
       <CopyToOutputDirectory>
         PreserveNewest
       </CopyToOutputDirectory>
     </Content>
-    <Folder Include="Logs\" />
+    <Content Include="Logs\">
+      <CopyToOutputDirectory>
+        PreserveNewest
+      </CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
