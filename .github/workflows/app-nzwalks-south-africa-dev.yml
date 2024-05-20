@@ -28,8 +28,8 @@ jobs:
       run: |
         dotnet tool install --global dotnet-ef
         dotnet tool restore
-        dotnet ef database update -c NzWalksDbContext -project NZWalks.Infrastructure 
-        dotnet ef database update -c NzWalksAuthDbContext
+        dotnet-ef database update -c NzWalksDbContext --project NZWalks.Infrastructure 
+        dotnet-ef database update -c NzWalksAuthDbContext
     - name: Publish
       run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
     - name: Publish Artifacts
