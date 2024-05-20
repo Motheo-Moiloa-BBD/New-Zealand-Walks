@@ -23,8 +23,8 @@ jobs:
       run: |
         dotnet tool install --global dotnet-ef
         dotnet tool restore
-        dotnet-ef database update -c NzWalksDbContext --project "${{ env.MIGRATIONS_DIRECTORY }}" 
-        dotnet-ef database update -c NzWalksAuthDbContext --project "${{ env.MIGRATIONS_DIRECTORY }}"
+        dotnet-ef database update -c NzWalksDbContext --project "${{ env.MIGRATIONS_DIRECTORY }}" --startup-project "${{ env.WORKING_DIRECTORY }}" 
+        dotnet-ef database update -c NzWalksAuthDbContext --project "${{ env.MIGRATIONS_DIRECTORY }}" --startup-project "${{ env.WORKING_DIRECTORY }}"
     - name: Restore
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
     - name: Build
