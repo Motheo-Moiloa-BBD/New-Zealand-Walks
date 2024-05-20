@@ -23,11 +23,17 @@ jobs:
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
     - name: Build
       run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
-    - name: Migrate DB
+    - name: Install EF Tool
+      run: dotnet tool install --global dotnet-ef
+    - name: Generate scripts
       run: |
-        dotnet tool install --global dotnet-ef
-        dotnet-ef database update --context NzWalksDbContext --project "${{ env.MIGRATIONS_DIRECTORY }}" --startup-project "${{ env.WORKING_DIRECTORY }}" 
-        dotnet-ef database update --context NzWalksAuthDbContext --project "${{ env.MIGRATIONS_DIRECTORY }}" --startup-project "${{ env.WORKING_DIRECTORY }}"
+           dotnet-ef migrations script --output ${{ env.WORKING_DIRECTORY }}/sql/sql-script.sql --idempotent -c NzWalksDbContext --project "${{ env.MIGRATIONS_DIRECTORY }}" --startup-project "${{ env.WORKING_DIRECTORY }}" --no-build
+           dotnet-ef migrations script --output ${{ env.WORKING_DIRECTORY }}/sql/sql-auth-script.sql --idempotent -c NzWalksAuthDbContext --project "${{ env.MIGRATIONS_DIRECTORY }}" --startup-project "${{ env.WORKING_DIRECTORY }}" --no-build
+    - name: Azure SQL Deploy
+      uses: azure/sql-action@v2.2.1
+      with: 
+        connection-string: ${{ secrets.connection.string }}
+        path: ${{ env.WORKING_DIRECTORY }}/sql/*.sql
     - name: Test
       run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
     - name: Publish
