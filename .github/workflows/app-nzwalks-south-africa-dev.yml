@@ -9,6 +9,7 @@ env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: NZWalks\NZWalks.API
+  MIGRATIONS_DIRECTORY: NZWalks\NZWalks.Infrastructure 
 jobs:
   build:
     runs-on: windows-latest
@@ -22,8 +23,8 @@ jobs:
       run: |
         dotnet tool install --global dotnet-ef
         dotnet tool restore
-        dotnet-ef database update -c NzWalksDbContext --project "${{ env.WORKING_DIRECTORY }}" 
-        dotnet-ef database update -c NzWalksAuthDbContext --project "${{ env.WORKING_DIRECTORY }}"
+        dotnet-ef database update -c NzWalksDbContext --project "${{ env.MIGRATIONS_DIRECTORY }}" 
+        dotnet-ef database update -c NzWalksAuthDbContext --project "${{ env.MIGRATIONS_DIRECTORY }}"
     - name: Restore
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
     - name: Build
