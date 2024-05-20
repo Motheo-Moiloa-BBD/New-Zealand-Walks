@@ -26,7 +26,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Images\" />
+    <Content Include="Images\*">
+      <CopyToOutputDirectory>
+        PreserveNewest
+      </CopyToOutputDirectory>
+    </Content>
     <Folder Include="Logs\" />
   </ItemGroup>
 
