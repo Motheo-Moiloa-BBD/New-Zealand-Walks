@@ -19,16 +19,15 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
-    - name: Migrate DB
-      run: |
-        dotnet tool install --global dotnet-ef
-        dotnet tool restore
-        dotnet-ef database update -c NzWalksDbContext --project "${{ env.MIGRATIONS_DIRECTORY }}" --startup-project "${{ env.WORKING_DIRECTORY }}" 
-        dotnet-ef database update -c NzWalksAuthDbContext --project "${{ env.MIGRATIONS_DIRECTORY }}" --startup-project "${{ env.WORKING_DIRECTORY }}"
     - name: Restore
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
     - name: Build
       run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
+    - name: Migrate DB
+      run: |
+        dotnet tool install --global dotnet-ef
+        dotnet-ef database update --context NzWalksDbContext --project "${{ env.MIGRATIONS_DIRECTORY }}" --startup-project "${{ env.WORKING_DIRECTORY }}" 
+        dotnet-ef database update --context NzWalksAuthDbContext --project "${{ env.MIGRATIONS_DIRECTORY }}" --startup-project "${{ env.WORKING_DIRECTORY }}"
     - name: Test
       run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
     - name: Publish
