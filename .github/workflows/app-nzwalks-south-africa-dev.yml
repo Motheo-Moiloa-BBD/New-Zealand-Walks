@@ -18,18 +18,18 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+    - name: Migrate DB
+      run: |
+        dotnet tool install --global dotnet-ef
+        dotnet tool restore
+        dotnet-ef database update -c NzWalksDbContext --project "${{ env.WORKING_DIRECTORY }}" 
+        dotnet-ef database update -c NzWalksAuthDbContext --project "${{ env.WORKING_DIRECTORY }}"
     - name: Restore
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
     - name: Build
       run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
     - name: Test
       run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
-    - name: Update Database
-      run: |
-        dotnet tool install --global dotnet-ef
-        dotnet tool restore
-        dotnet-ef database update -c NzWalksDbContext --project "${{ env.WORKING_DIRECTORY }}" 
-        dotnet-ef database update -c NzWalksAuthDbContext --project "${{ env.WORKING_DIRECTORY }}"
     - name: Publish
       run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
     - name: Publish Artifacts
