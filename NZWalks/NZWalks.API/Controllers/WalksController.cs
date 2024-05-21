@@ -18,7 +18,7 @@ namespace NZWalks.API.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Roles = "Reader, Writer")]
+        [Authorize(Roles = "Reader, Writer")]
         public async Task<IActionResult> GetAll([FromQuery] string? filterOn, [FromQuery] string? filterQuery, [FromQuery] string? sortBy, [FromQuery] string? sortOrder, [FromQuery] int? pageNumber, [FromQuery] int? pageSize)
         {
             var walks = await walkService.GetAllWalks(filterOn, filterQuery, sortBy, sortOrder, pageNumber, pageSize);
@@ -28,7 +28,7 @@ namespace NZWalks.API.Controllers
         
         [HttpGet]
         [Route("{id:guid}")]
-        //[Authorize(Roles = "Reader, Writer")]
+        [Authorize(Roles = "Reader, Writer")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             var walk = await walkService.GetWalkById(id);
