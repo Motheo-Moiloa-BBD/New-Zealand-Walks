@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,9 +8,10 @@ using Newtonsoft.Json;
 using NZWalks.Core.Models.DTO;
 using NZWalks.Services.Interfaces;
 using System.Net;
+using System.Security.Claims;
 
 
-namespace NZWalks.API.Tests
+namespace NZWalks.API.Tests.Controllers
 {
     public class RegionsControllerTests : IClassFixture<WebApplicationFactory<Program>>
     {
@@ -19,16 +21,32 @@ namespace NZWalks.API.Tests
 
         public RegionsControllerTests(WebApplicationFactory<Program> factory)
         {
-           this.factory = factory;
+            this.factory = factory;
+            
             _httpClient = this.factory
                 .WithWebHostBuilder(builder =>
                 {
                     builder.ConfigureTestServices(services =>
                     {
                         services.AddSingleton(regionServiceMock.Object);
+                        services.AddAuthentication("Test")
+                            .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", options => { });
+                        services.AddAuthorization(options =>
+                        {
+                            options.AddPolicy("TestPolicy", policy =>
+                            {
+                                policy.RequireAuthenticatedUser();
+                                policy.RequireClaim(ClaimTypes.Role, ["Writer, Reader"]);
+                            });
+                        });
                     });
                 })
-                .CreateClient();
+                .CreateClient(new WebApplicationFactoryClientOptions
+                {
+                    AllowAutoRedirect = false
+                });
+            
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Test");
         }
 
         [Fact]
@@ -47,7 +65,7 @@ namespace NZWalks.API.Tests
             };
 
             regionServiceMock.Setup(regionService => regionService.GetAllRegions()).ReturnsAsync(regions);
-            
+
             //Act
             var response = await _httpClient.GetAsync("api/regions");
 
@@ -56,7 +74,13 @@ namespace NZWalks.API.Tests
             var returnedJson = await response.Content.ReadAsStringAsync();
             var returnedList = JsonConvert.DeserializeObject<List<RegionDTO>>(returnedJson);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal(regions, returnedList);
+            Assert.Collection(returnedList, region =>
+            {
+                Assert.Equal(regions[0].Id, region.Id);
+                Assert.Equal(regions[0].Code, region.Code);
+                Assert.Equal(regions[0].Name, region.Name);
+                Assert.Equal(regions[0].RegionImageUrl, region.RegionImageUrl);
+            });
         }
 
     }
