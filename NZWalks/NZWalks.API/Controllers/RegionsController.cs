@@ -49,7 +49,7 @@ namespace NZWalks.API.Controllers
         {
            var createdRegion = await regionService.CreateRegion(addRegionDTO);
 
-            return CreatedAtAction(nameof(GetById), new {id = createdRegion.Id }, createdRegion);
+           return CreatedAtAction(nameof(GetById), new {id = createdRegion.Id }, createdRegion);
         }
 
         

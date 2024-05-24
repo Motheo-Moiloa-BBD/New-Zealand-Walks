@@ -12,7 +12,6 @@ namespace NZWalks.Infrastructure.Repositories
     public abstract class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         protected readonly NzWalksDbContext dbContext;
-
         protected GenericRepository(NzWalksDbContext dbContext)
         {
             this.dbContext = dbContext;
@@ -29,12 +28,10 @@ namespace NZWalks.Infrastructure.Repositories
         {
            await dbContext.Set<T>().AddAsync(entity);
         }
-
         public void Delete(T entity)
         {
             dbContext.Set<T>().Remove(entity);
         }
-
         public void Update(T entity)
         {
             dbContext.Set<T>().Update(entity);

@@ -50,7 +50,7 @@ namespace NZWalks.API.Tests.Controllers
         }
 
         [Fact]
-        public async Task GetAll_Regions_Success()
+        public async Task GetAll_Success()
         {
             //Arrange
             var regions = new List<RegionDTO>()

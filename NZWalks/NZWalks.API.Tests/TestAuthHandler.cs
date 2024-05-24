@@ -17,7 +17,6 @@ namespace NZWalks.API.Tests
             : base(options, logger, encoder, clock)
         {
         }
-
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             var claims = new[] 

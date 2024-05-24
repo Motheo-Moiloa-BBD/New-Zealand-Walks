@@ -68,6 +68,11 @@ namespace NZWalks.Core.Middlewares
                     exceptionResponse.statusMessage = ex.Message;
                     response.StatusCode = (int)HttpStatusCode.NotFound;
                     break;
+                case DuplicateException:
+                    exceptionResponse.statusCode = (int)HttpStatusCode.Conflict;
+                    exceptionResponse.statusMessage = ex.Message;
+                    response.StatusCode = (int)HttpStatusCode.Conflict;
+                    break;
                 default:
                     exceptionResponse.statusCode = (int)HttpStatusCode.InternalServerError;
                     exceptionResponse.statusMessage = "Internal Server Error, Please retry after a few minutes.";
