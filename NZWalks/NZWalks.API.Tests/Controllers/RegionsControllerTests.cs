@@ -1,5 +1,4 @@
 ﻿
-using Azure;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -11,7 +10,13 @@ using NZWalks.Core.Models.DTO;
 using NZWalks.Services.Interfaces;
 using System.Net;
 using System.Net.Http.Json;
+using System.Net.Http.Headers;
 using System.Security.Claims;
+using System.Text.Json;
+using System.Text;
+using System.Net.Mime;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 
 
 namespace NZWalks.API.Tests.Controllers
@@ -29,6 +34,11 @@ namespace NZWalks.API.Tests.Controllers
             _httpClient = this.factory
                 .WithWebHostBuilder(builder =>
                 {
+                    builder.ConfigureLogging(logging =>
+                    {
+                        logging.ClearProviders();
+                        logging.AddConsole();
+                    });
                     builder.ConfigureTestServices(services =>
                     {
                         services.AddSingleton(regionServiceMock.Object);
@@ -50,6 +60,7 @@ namespace NZWalks.API.Tests.Controllers
                 });
             
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Test");
+            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         [Fact]
@@ -122,14 +133,14 @@ namespace NZWalks.API.Tests.Controllers
         public async Task Create_Success()
         {
             //Arrange
-            var addRegion = new AddRegionDTO()
+            var addRegion = new AddRegionDTO
             {
                 Code = "MAH",
                 Name = "Mahikeng",
                 RegionImageUrl = "mahikeng-image.png"
             };
 
-            var expectedRegion = new RegionDTO()
+            var expectedRegion = new RegionDTO
             {
                 Id = Guid.Parse("9710f419-cc01-4489-adc0-ad43d529cdbe"),
                 Code = "MAH",
@@ -137,10 +148,10 @@ namespace NZWalks.API.Tests.Controllers
                 RegionImageUrl = "mahikeng-image.png"
             };
 
-            regionServiceMock.Setup(regionService => regionService.CreateRegion(addRegion)).ReturnsAsync(expectedRegion);
+            regionServiceMock.Setup(regionService => regionService.CreateRegion(It.IsAny<AddRegionDTO>())).ReturnsAsync(expectedRegion);
 
             //Act
-            var response = await _httpClient.PostAsync("api/regions", JsonContent.Create(addRegion));
+            var response = await _httpClient.PostAsJsonAsync("api/regions", addRegion);
 
             //Assert
             response.EnsureSuccessStatusCode();
