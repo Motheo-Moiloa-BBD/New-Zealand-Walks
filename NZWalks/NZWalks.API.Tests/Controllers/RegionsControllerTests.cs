@@ -17,6 +17,7 @@ using System.Text;
 using System.Net.Mime;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
+using NZWalks.Core.Models.Domain;
 
 
 namespace NZWalks.API.Tests.Controllers
@@ -124,9 +125,18 @@ namespace NZWalks.API.Tests.Controllers
         }
 
         [Fact]
-        public Task GetById_NotFoundException_404()
+        public async Task GetById_NotFoundException_404()
         {
-            return AssertThatGetByIdHandlesGivenException(new NotFoundException("Region not found."), HttpStatusCode.NotFound);
+            //Arrange
+            var id = Guid.Parse("9710f419-cc01-4489-adc0-ad43d529cdbe");
+
+            regionServiceMock.Setup(regionService => regionService.GetRegionById(id)).ThrowsAsync(new NotFoundException("Region not found."));
+            
+            //Act
+            var response = await _httpClient.GetAsync($"api/regions/{id}");
+
+            //Assert
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         [Fact]
@@ -158,17 +168,157 @@ namespace NZWalks.API.Tests.Controllers
             var returnedJson = await response.Content.ReadAsStringAsync();
             var returnedRegion = JsonConvert.DeserializeObject<RegionDTO>(returnedJson);
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            Assert.Equal(expectedRegion.Code, returnedRegion.Code);
+            Assert.Equal(expectedRegion.Name, returnedRegion.Name);
+            Assert.Equal(expectedRegion.RegionImageUrl, returnedRegion.RegionImageUrl);
         }
 
-        private async Task AssertThatGetByIdHandlesGivenException(Exception givenException, HttpStatusCode resultingStatusCode)
+        [Fact]
+        public async Task Create_BadRequestException_400()
         {
+            //Arrange
+            var addRegion = new AddRegionDTO
+            {
+                Code = "MAH",
+                Name = "Mahikeng",
+                RegionImageUrl = "mahikeng-image.png"
+            };
+
+            regionServiceMock.Setup(regionService => regionService.CreateRegion(It.IsAny<AddRegionDTO>())).ThrowsAsync(new BadRequestException("There was a problem when saving the region."));
+
+            //Act
+            var response = await _httpClient.PostAsJsonAsync("api/regions", addRegion);
+
+            //Assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Update_Success()
+        {
+            //Arrange
             var id = Guid.Parse("9710f419-cc01-4489-adc0-ad43d529cdbe");
 
-            regionServiceMock.Setup(regionService => regionService.GetRegionById(id)).ThrowsAsync(givenException);
+            var updateRegion = new UpdateRegionDTO
+            {
+                Code = "KIN",
+                Name = "Kinross",
+                RegionImageUrl = "kinross-image.png"
+            };
 
-            var response = await _httpClient.GetAsync($"api/regions/{id}");
+            var expectedRegion = new RegionDTO
+            {
+                Id = Guid.Parse("9710f419-cc01-4489-adc0-ad43d529cdbe"),
+                Code = "KIN",
+                Name = "Kinross",
+                RegionImageUrl = "kinross-image.png"
+            };
 
-            Assert.Equal(resultingStatusCode,response.StatusCode);
+            regionServiceMock.Setup(regionService => regionService.UpdateRegion(id, It.IsAny<UpdateRegionDTO>())).ReturnsAsync(expectedRegion);
+
+            //Act
+            var response = await _httpClient.PutAsJsonAsync($"api/regions/{id}", updateRegion);
+
+            //Assert
+           // response.EnsureSuccessStatusCode();
+            var returnedJson = await response.Content.ReadAsStringAsync();
+            var returnedRegion = JsonConvert.DeserializeObject<RegionDTO>(returnedJson);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(expectedRegion.Id, returnedRegion.Id);
+            Assert.Equal(expectedRegion.Code, returnedRegion.Code);
+            Assert.Equal(expectedRegion.Name, returnedRegion.Name);
+            Assert.Equal(expectedRegion.RegionImageUrl, returnedRegion.RegionImageUrl);
+        }
+
+        [Fact]
+        public Task Update_NotFoundException_404()
+        {
+            return AssertThatUpdateHandlesGivenException(new NotFoundException("Region not found."), HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public Task Update_BadRequestException_400()
+        {
+           return AssertThatUpdateHandlesGivenException(new BadRequestException("There was a problem when deleting the region."), HttpStatusCode.BadRequest);
+        }
+
+
+        [Fact]
+        public async Task Delete_Success()
+        {
+            //Arrange
+            var id = Guid.Parse("9710f419-cc01-4489-adc0-ad43d529cdbe");
+
+            var expectedRegion = new RegionDTO
+            {
+                Id = Guid.Parse("9710f419-cc01-4489-adc0-ad43d529cdbe"),
+                Code = "KIN",
+                Name = "Kinross",
+                RegionImageUrl = "kinross-image.png"
+            };
+
+            regionServiceMock.Setup(regionService => regionService.DeleteRegion(id)).ReturnsAsync(expectedRegion);
+
+            //Act
+            var response = await _httpClient.DeleteAsync($"api/regions/{id}");
+
+            //Assert
+            // response.EnsureSuccessStatusCode();
+            var returnedJson = await response.Content.ReadAsStringAsync();
+            var returnedRegion = JsonConvert.DeserializeObject<RegionDTO>(returnedJson);
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(expectedRegion.Id, returnedRegion.Id);
+            Assert.Equal(expectedRegion.Code, returnedRegion.Code);
+            Assert.Equal(expectedRegion.Name, returnedRegion.Name);
+            Assert.Equal(expectedRegion.RegionImageUrl, returnedRegion.RegionImageUrl);
+        }
+
+
+        [Fact]
+        public Task Delete_NotFoundException_404()
+        {
+            return AssertThatDeleteHandlesGivenException(new NotFoundException("Region not found."), HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public Task Delete_BadRequestException_404()
+        {
+           return AssertThatDeleteHandlesGivenException(new BadRequestException("There was a problem when deleting the region."), HttpStatusCode.BadRequest);
+        }
+
+
+        private async Task AssertThatUpdateHandlesGivenException(Exception givenException, HttpStatusCode resultingStatusCode)
+        {
+            //Arrange
+            var id = Guid.Parse("9710f419-cc01-4489-adc0-ad43d529cdbe");
+
+            var updateRegion = new UpdateRegionDTO
+            {
+                Code = "KIN",
+                Name = "Kinross",
+                RegionImageUrl = "kinross-image.png"
+            };
+
+            regionServiceMock.Setup(regionService => regionService.UpdateRegion(id, It.IsAny<UpdateRegionDTO>())).ThrowsAsync(givenException);
+
+            //Act
+            var response = await _httpClient.PutAsJsonAsync($"api/regions/{id}", updateRegion);
+
+            //Assert
+            Assert.Equal(resultingStatusCode, response.StatusCode);
+        }
+        private async Task AssertThatDeleteHandlesGivenException(Exception givenException, HttpStatusCode resultingStatusCode)
+        {
+            //Arrange
+            var id = Guid.Parse("9710f419-cc01-4489-adc0-ad43d529cdbe");
+
+            regionServiceMock.Setup(regionService => regionService.DeleteRegion(id)).ThrowsAsync(givenException);
+
+            //Act
+            var response = await _httpClient.DeleteAsync($"api/regions/{id}");
+
+            //Assert
+            Assert.Equal(resultingStatusCode, response.StatusCode);
         }
     }
 }

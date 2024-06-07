@@ -21,7 +21,7 @@ namespace NZWalks.Tests
             regionsController = new RegionsController(mockRegionService.Object);
         }
 
-        [Fact]
+        [Fact(Skip = "Duplicate")]
         public async Task GetAll_Success()
         {
             // Arrange
@@ -42,7 +42,7 @@ namespace NZWalks.Tests
             Assert.Equal(mockRegions.Count, returnValue.Count);
         }
 
-        [Fact]
+        [Fact(Skip = "Duplicate")]
         public async Task GetById_Success()
         {
             // Arrange
@@ -60,7 +60,7 @@ namespace NZWalks.Tests
             Assert.Equal(regionId, returnValue.Id);
         }
 
-        [Fact]
+        [Fact(Skip = "Duplicate")]
         public async Task Create_Success()
         {
             // Arrange
@@ -78,7 +78,7 @@ namespace NZWalks.Tests
             Assert.Equal(mockRegion.Id, returnValue.Id);
         }
 
-        [Fact]
+        [Fact(Skip = "Duplicate")]
         public async Task Update_Success()
         {
             // Arrange
@@ -97,7 +97,7 @@ namespace NZWalks.Tests
             Assert.Equal(mockRegion.Id, returnValue.Id);
         }
 
-        [Fact]
+        [Fact(Skip = "Duplicate")]
         public async Task Delete_Success()
         {
             // Arrange
