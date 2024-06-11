@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,12 +11,8 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Net.Http.Headers;
 using System.Security.Claims;
-using System.Text.Json;
-using System.Text;
-using System.Net.Mime;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
-using NZWalks.Core.Models.Domain;
 
 
 namespace NZWalks.API.Tests.Controllers
@@ -130,7 +125,7 @@ namespace NZWalks.API.Tests.Controllers
             //Arrange
             var id = Guid.Parse("9710f419-cc01-4489-adc0-ad43d529cdbe");
 
-            regionServiceMock.Setup(regionService => regionService.GetRegionById(id)).ThrowsAsync(new NotFoundException("Region not found."));
+            regionServiceMock.Setup(regionService => regionService.GetRegionById(id)).ThrowsAsync(new NotFoundException($"Region with id {id} does not exist."));
             
             //Act
             var response = await _httpClient.GetAsync($"api/regions/{id}");
@@ -220,7 +215,7 @@ namespace NZWalks.API.Tests.Controllers
             var response = await _httpClient.PutAsJsonAsync($"api/regions/{id}", updateRegion);
 
             //Assert
-           // response.EnsureSuccessStatusCode();
+            response.EnsureSuccessStatusCode();
             var returnedJson = await response.Content.ReadAsStringAsync();
             var returnedRegion = JsonConvert.DeserializeObject<RegionDTO>(returnedJson);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -263,7 +258,7 @@ namespace NZWalks.API.Tests.Controllers
             var response = await _httpClient.DeleteAsync($"api/regions/{id}");
 
             //Assert
-            // response.EnsureSuccessStatusCode();
+            response.EnsureSuccessStatusCode();
             var returnedJson = await response.Content.ReadAsStringAsync();
             var returnedRegion = JsonConvert.DeserializeObject<RegionDTO>(returnedJson);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);

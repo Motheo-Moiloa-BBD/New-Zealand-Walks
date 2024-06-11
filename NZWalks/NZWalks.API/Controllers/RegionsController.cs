@@ -1,10 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using NZWalks.Services.Interfaces;
 using NZWalks.Core.Models.DTO;
-using NZWalks.Core.Models.Domain;
-using NZWalks.Infrastructure.Repositories;
 using NZWalks.Core.CustomAttributes;
 using Microsoft.AspNetCore.Authorization;
 

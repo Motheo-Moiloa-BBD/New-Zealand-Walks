@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NZWalks.Core.Models.DTO;
-using NZWalks.Services;
 using NZWalks.Services.Interfaces;
 
 namespace NZWalks.API.Controllers

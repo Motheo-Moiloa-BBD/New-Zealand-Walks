@@ -3,14 +3,7 @@ using Moq;
 using NZWalks.Core.Interfaces;
 using NZWalks.Core.Mappings;
 using NZWalks.Core.Models.Domain;
-using NZWalks.Core.Models.DTO;
 using NZWalks.Services;
-using NZWalks.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NZWalks.API.Tests.Services
 {

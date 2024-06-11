@@ -1,10 +1,4 @@
-﻿using NZWalks.Core.Models.Domain;
-using NZWalks.Core.Models.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using NZWalks.Core.Models.DTO;
 
 namespace NZWalks.Services.Interfaces
 {
